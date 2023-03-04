@@ -159,16 +159,20 @@ class MenuPage(QWidget):
         self.delproductbtn=QPushButton("Del Product")
         self.showproductbtn=QPushButton("Show Product")
         self.showusers=QPushButton("Show Users")
+        self.backk=QPushButton("back")
         self.exit=QPushButton("left")
         self.newlogin=QPushButton("change password")
         self.label=QLabel('                              TexnoMarket create menu')
         self.v_box=QVBoxLayout()
-        self.lis=[self.label, self.newlogin, self.addproductbtn, self.delproductbtn, self.showproductbtn, self.showusers, self.exit]
+        self.h_box=QHBoxLayout()
+        self.lis=[self.label, self.newlogin, self.addproductbtn, self.delproductbtn, self.showproductbtn, self.showusers, self.exit, self.backk]
         
-        for i in range(7):
-            self.v_box.addWidget(self.lis[i])
+        for i in range(8):
+            if i<6: self.v_box.addWidget(self.lis[i])
+            else: self.h_box.addWidget(self.lis[i])
             if i!=0:
                 self.lis[i].clicked.connect(self.eventclick)
+        self.v_box.addLayout(self.h_box)
         self.setLayout(self.v_box)
         self.setteelshett(self.lis)
         
