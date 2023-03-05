@@ -166,7 +166,7 @@ class MenuPage(QWidget):
         self.v_box=QVBoxLayout()
         self.h_box=QHBoxLayout()
         self.lis=[self.label, self.newlogin, self.addproductbtn, self.delproductbtn, self.showproductbtn, self.showusers, self.exit, self.backk]
-        
+
         for i in range(8):
             if i<6: self.v_box.addWidget(self.lis[i])
             else: self.h_box.addWidget(self.lis[i])
@@ -212,7 +212,7 @@ class NewLoginPage(QWidget):
         self.newpassword.setPlaceholderText('NewPassword...')
         self.back_btn=QPushButton('back')
         self.chiqish_btn=QPushButton('left')
-        self.tasdiqlash=QPushButton('Tasdiqlash')
+        self.tasdiqlash=QPushButton('Change')
         self.label=QLabel("                                      change password")
         self.checklabel=QLabel()
         self.h_box=QHBoxLayout()
@@ -510,17 +510,16 @@ class delProduct(Connectdb):
         self.delledit2=QLineEdit()
         self.v_box=QVBoxLayout()
         self.h_box=QHBoxLayout()
-        self.delledit.setPlaceholderText("name...")
-        self.delledit2.setPlaceholderText("color...")
+        self.delledit.setPlaceholderText("id...")
         self.delete=QPushButton("delete")
         self.back=QPushButton("back")
         self.left=QPushButton("left")
-        self.lis=[self.note, self.delledit, self.delledit2, self.delete, self.left, self.back]
+        self.lis=[self.note, self.delledit, self.delete, self.left, self.back]
         self.setteelshett(self.lis)
-        for i in range(6):
-            if i<4: self.v_box.addWidget(self.lis[i])
+        for i in range(5):
+            if i<3: self.v_box.addWidget(self.lis[i])
             else: self.h_box.addWidget(self.lis[i])
-            if i>2:
+            if i>1:
                 self.lis[i].clicked.connect(self.eventclick)
         self.v_box.addLayout(self.h_box)
         self.setLayout(self.v_box)
@@ -530,9 +529,9 @@ class delProduct(Connectdb):
             try:
                 with self.mydb.cursor() as cursor:
                     if self.check==1:
-                        cursor.execute(f"DELETE FROM phones WHERE name='{self.delledit.text()}' and color='{self.delledit2.text()}';")
+                        cursor.execute(f"DELETE FROM phones WHERE id='{self.delledit.text()}';")
                     elif self.check==2:
-                        cursor.execute(f"""DELETE FROM laptops WHERE name="{self.delledit.text()}" and color="{self.delledit2.text()}";""")
+                        cursor.execute(f"""DELETE FROM laptops WHERE id="{self.delledit.text()}";""")
                     elif self.check==3:
                         pass
             except Exception as err: print(err)
