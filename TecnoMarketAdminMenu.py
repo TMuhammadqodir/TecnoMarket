@@ -1,6 +1,7 @@
 import sys
 import mysql.connector
 from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication, QLabel, QListWidget, QLineEdit, QVBoxLayout, QPushButton, QHBoxLayout
+import pyqtdesign
 
 class Connectdb(QWidget):
     def __init__(self) -> None:
@@ -701,25 +702,30 @@ class ShowProduct(QWidget):
             i.setFixedHeight(50)    
                 
 
-class ShowPhones(Connectdb):
+class ShowPhones(QMainWindow, Connectdb):
     def __init__(self) -> None:
         super().__init__()                
+        self.ui=pyqtdesign.Ui_MainWindow()
+        self.ui.setupUi(self)
         self.create_db()
         self.CreateProductPhone
 
 
-
-class ShowLaptops(Connectdb):
+class ShowLaptops(QMainWindow, Connectdb):
     def __init__(self) -> None:
         super().__init__()
+        self.ui=pyqtdesign.Ui_MainWindow()
+        self.ui.setupUi(self)
         self.create_db()
         self.CreateProductLaptop
         
         
 
-class ShowSmarWatchs(Connectdb):
+class ShowSmarWatchs(QMainWindow, Connectdb):
     def __init__(self) -> None:
         super().__init__()
+        self.ui=pyqtdesign.Ui_MainWindow()
+        self.ui.setupUi(self)
         self.create_db()
         self.CreateProductSmartWatch
 
