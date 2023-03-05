@@ -64,6 +64,21 @@ class Connectdb(QWidget):
         except Exception as err: print(err)
         else: print("laptop ok")
         
+    def CreateProductSmartWatch(self):
+        try:
+            with self.mydb.cursor() as cursor:
+                cursor.execute("""CREATE TABLE IF NOT EXISTS smartwatchs(
+                    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    brand VARCHAR(128) NOT NULL,
+                    name VARCHAR(128) NOT NULL,
+                    color VARCHAR(128) NOT NULL,
+                    memory INT NOT NULL,
+                    battary VARCHAR(128) NOT NULL,  
+                    price DECIMAL NOT NULL
+                    );""")
+        except Exception as err: print(err)
+        else: print("SmartW ok")
+        
     def SetLoginPassword(self,login, password, newlogin, newpassword):
         temp=self.GetLoginPassword()
         if not (login==temp[0][0] and password==temp[0][1] and newlogin!=newpassword and len(newlogin)>7 and len(newpassword)>7): return False
@@ -193,6 +208,10 @@ class MenuPage(QWidget):
             self.close()
             self.open=AddDelProduct(0)
             self.open.show()
+        elif self.sender().text()=="Show Product":
+            self.close()
+            self.open=ShowProduct()
+            self.open.show()
             
                    
 class NewLoginPage(QWidget):
@@ -301,7 +320,12 @@ class AddDelProduct(Connectdb):
                 self.open=delProduct(2)
             self.open.show()
         elif self.sender().text()=="SmartWatch":
-            pass
+            self.close()
+            if self.check:
+                self.open=AddSmartWatch()
+            else:
+                self.open=delProduct(3)
+            self.open.show()
         elif self.sender().text()=="back":
             self.close()
             self.open=MenuPage()
@@ -481,12 +505,84 @@ class AddLaptop(Connectdb):
         else:
             self.close()
         
+class AddSmartWatch(Connectdb):
+    def __init__(self) -> None:
+        super().__init__()
+        self.create_db()
+        self.CreateProductSmartWatch()
+        self.setMinimumWidth(400)
+        self.ledit1=QLineEdit()
+        self.ledit2=QLineEdit()
+        self.ledit3=QLineEdit()
+        self.ledit4=QLineEdit()
+        self.ledit5=QLineEdit()
+        self.ledit6=QLineEdit()
+        self.addbtn=QPushButton("Add")
+        self.back=QPushButton('back')
+        self.exit=QPushButton('left')
+        self.v_box=QVBoxLayout()
+        self.h_box=QHBoxLayout()
+        self.note=QLabel("                                         Add laptop")
+        self.ledit1.setPlaceholderText("brand...")
+        self.ledit2.setPlaceholderText("name...")
+        self.ledit3.setPlaceholderText("price...")
+        self.ledit4.setPlaceholderText("color...")
+        self.ledit5.setPlaceholderText("memory...")
+        self.ledit6.setPlaceholderText("battary...")
+        self.checklabel=QLabel()
+        self.checklabel.setFixedHeight(50)
+        
+        self.lis=[self.note, self.ledit1, self.ledit2, self.ledit3, self.ledit5, self.ledit6, self.ledit4, self.addbtn, self.exit, self.back]
+        self.setteelshett(self.lis)
+        for i in range(10):
+            if i<8: self.v_box.addWidget(self.lis[i])
+            else: self.h_box.addWidget(self.lis[i])
+            if i>6: self.lis[i].clicked.connect(self.eventbtn)
+        self.v_box.addLayout(self.h_box)
+        self.v_box.addWidget(self.checklabel)
+        
+        self.setLayout(self.v_box)    
+        
+    def setteelshett(self, temp):
+        for i in temp:
+            i.setFixedHeight(50)    
+            
+    def eventbtn(self):
+        if self.sender().text()=="Add":
+            if len(self.ledit1.text())>0 and len(self.ledit2.text())>0 and len(self.ledit3.text())>0 and len(self.ledit4.text())>0 and len(self.ledit5.text())>0 and len(self.ledit6.text())>0 and len(self.ledit7.text())>0 and self.ledit3.text().isnumeric() and self.ledit5.text().isnumeric() and self.ledit6.text().isnumeric() and len(self.ledit8.text())>0:
+                try: 
+                    with self.mydb.cursor() as cursor:
+                        cursor.execute(f"INSERT INTO smartwatchs(brand, name, color, memory, ram, battary, price) values('{self.ledit1.text()}', '{self.ledit2.text()}', '{self.ledit4.text()}', '{self.ledit5.text()}', '{self.ledit6.text()}', '{self.ledit3.text()}');")
+                except Exception as err: print(err)
+                else: 
+                    self.mydb.commit()
+                    print("add smartw ok")
+                    self.checklabel.setText('')
+                finally:
+                    self.ledit1.setText('') 
+                    self.ledit2.setText('') 
+                    self.ledit4.setText('') 
+                    self.ledit5.setText('') 
+                    self.ledit6.setText('') 
+                    self.ledit3.setText('') 
+            else:
+                self.checklabel.setText("wrong entered!")
+                self.ledit1.setText('') 
+                self.ledit2.setText('') 
+                self.ledit4.setText('') 
+                self.ledit5.setText('') 
+                self.ledit6.setText('') 
+                self.ledit3.setText('')
+                
+        elif self.sender().text()=="back":
+            self.checklabel.setText('')
+            self.close()
+            self.open=AddDelProduct(1)
+            self.open.show()
+        else:
+            self.close()
         
         
-        
-
-
-
 class delProduct(Connectdb):
     def __init__(self,check) -> None:
         super().__init__()
@@ -503,7 +599,7 @@ class delProduct(Connectdb):
             self.CreateProductLaptop()
             self.note.setText("                        dellaptop")
         elif self.check==3:
-            self.CreateProductSmartW()
+            self.CreateProductSmartWatch()
             self.note.setText("                        dellsmartwatch")
         
         self.delledit=QLineEdit()
@@ -533,7 +629,7 @@ class delProduct(Connectdb):
                     elif self.check==2:
                         cursor.execute(f"""DELETE FROM laptops WHERE id="{self.delledit.text()}";""")
                     elif self.check==3:
-                        pass
+                        cursor.execute(f"DELETE FROM smartwatchs WHERE id='{self.delledit.text()}';")
             except Exception as err: print(err)
             else:
                 self.mydb.commit()
@@ -553,8 +649,90 @@ class delProduct(Connectdb):
         for i in temp:
             i.setFixedHeight(50)
         
-    
+
+class ShowProduct(QWidget):
+    def __init__(self) -> None:
+        super().__init__()
         
+        self.label=QLabel()
+        self.label.setText("                                      Show Product")
+        self.phone=QPushButton("Phones")
+        self.laptop=QPushButton("Laptops")
+        self.smartW=QPushButton("SmartWatchs")
+        self.back=QPushButton("back")
+        self.left=QPushButton("left")
+        self.v_box=QVBoxLayout()
+        self.h_box=QHBoxLayout()
+        self.lis=[self.label, self.phone, self.laptop, self.smartW, self.left, self.back]
+        self.setMinimumWidth(400)
+        
+        self.setteelshett(self.lis)
+        for i in range(6):
+            if i<4: self.v_box.addWidget(self.lis[i])
+            else: self.h_box.addWidget(self.lis[i])
+            if i!=0:
+                self.lis[i].clicked.connect(self.eventclick)
+        self.v_box.addLayout(self.h_box)
+        self.setLayout(self.v_box)            
+    
+    def eventclick(self): 
+        if self.sender().text()=="Phones":
+            self.close()
+            self.open=ShowPhones()
+            self.open.show()
+        elif self.sender().text()=="Laptops":
+            self.close()
+            self.open=ShowLaptops()
+            self.open.show()
+        elif self.sender().text()=="SmartWatchs":
+            self.close()
+            self.open=ShowSmarWatchs()
+            self.open.show()
+        elif self.sender().text()=="back":
+            self.close()
+            self.open=MenuPage()
+            self.open.show()
+        else:
+            self.close()
+        
+    
+    def setteelshett(self, temp):
+        for i in temp:
+            i.setFixedHeight(50)    
+                
+
+class ShowPhones(Connectdb):
+    def __init__(self) -> None:
+        super().__init__()                
+        self.create_db()
+        self.CreateProductPhone
+
+
+
+class ShowLaptops(Connectdb):
+    def __init__(self) -> None:
+        super().__init__()
+        self.create_db()
+        self.CreateProductLaptop
+        
+        
+
+class ShowSmarWatchs(Connectdb):
+    def __init__(self) -> None:
+        super().__init__()
+        self.create_db()
+        self.CreateProductSmartWatch
+
+
+
+
+
+
+
+
+
+
+
                 
         
         
