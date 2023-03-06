@@ -705,29 +705,29 @@ class ShowProduct(QWidget):
 class ShowPhones(QMainWindow, Connectdb):
     def __init__(self) -> None:
         super().__init__()                
-        self.ui=pyqtdesign.Ui_MainWindow()
+        self.ui=pyqtdesign.Ui_MainWindow(1)
         self.ui.setupUi(self)
         self.create_db()
-        self.CreateProductPhone
+        self.CreateProductPhone()
 
 
 class ShowLaptops(QMainWindow, Connectdb):
     def __init__(self) -> None:
         super().__init__()
-        self.ui=pyqtdesign.Ui_MainWindow()
+        self.ui=pyqtdesign.Ui_MainWindow(2)
         self.ui.setupUi(self)
         self.create_db()
-        self.CreateProductLaptop
+        self.CreateProductLaptop()
         
         
 
 class ShowSmarWatchs(QMainWindow, Connectdb):
     def __init__(self) -> None:
         super().__init__()
-        self.ui=pyqtdesign.Ui_MainWindow()
+        self.ui=pyqtdesign.Ui_MainWindow(3)
         self.ui.setupUi(self)
         self.create_db()
-        self.CreateProductSmartWatch
+        self.CreateProductSmartWatch()
 
 
 
