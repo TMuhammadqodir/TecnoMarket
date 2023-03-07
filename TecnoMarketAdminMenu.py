@@ -1,6 +1,6 @@
 import sys
 import mysql.connector
-from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication, QLabel, QListWidget, QLineEdit, QVBoxLayout, QPushButton, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication, QLabel, QLineEdit, QVBoxLayout, QPushButton, QHBoxLayout, QTableWidgetItem
 import pyqtdesign
 
 class Connectdb(QWidget):
@@ -43,7 +43,7 @@ class Connectdb(QWidget):
                     memory INT NOT NULL,  
                     ram INT NOT NULL,
                     camera INT NOT NULL,
-                    price DECIMAL NOT NULL
+                    price FLOAT NOT NULL
                     );""")
         except Exception as err: print(err)
         else: print('phone ok')
@@ -60,7 +60,7 @@ class Connectdb(QWidget):
                     ram INT NOT NULL,
                     videocard VARCHAR(128) NOT NULL,
                     prossessor VARCHAR(128) Not Null,
-                    price DECIMAL NOT NULL
+                    price FLOAT NOT NULL
                     );""")
         except Exception as err: print(err)
         else: print("laptop ok")
@@ -75,7 +75,7 @@ class Connectdb(QWidget):
                     color VARCHAR(128) NOT NULL,
                     memory INT NOT NULL,
                     battary VARCHAR(128) NOT NULL,  
-                    price DECIMAL NOT NULL
+                    price FLOAT NOT NULL
                     );""")
         except Exception as err: print(err)
         else: print("SmartW ok")
@@ -213,6 +213,15 @@ class MenuPage(QWidget):
             self.close()
             self.open=ShowProduct()
             self.open.show()
+        elif self.sender().text()=="Show Users":
+            pass
+        
+        elif self.sender().text()=="left":
+            self.close()
+        else:
+            self.close()
+            self.open=KirishPage()
+            self.show()
             
                    
 class NewLoginPage(QWidget):
@@ -709,6 +718,39 @@ class ShowPhones(QMainWindow, Connectdb):
         self.ui.setupUi(self)
         self.create_db()
         self.CreateProductPhone()
+        self.changetextlineedit()
+        self.ui.pushButton_2.clicked.connect(self.eventbtn)
+        self.ui.pushButton_3.clicked.connect(self.eventbtn)
+        self.ui.lineEdit.textChanged.connect(self.changetextlineedit)
+        
+    def changetextlineedit(self):
+        try:
+            with self.mydb.cursor() as cursor:
+                cursor.execute(f"""SELECT *FROM phones where name like '{self.ui.lineEdit.text()}%'""")
+                answer=cursor.fetchall()
+        except Exception as err: print(err)
+        else:
+            row=0
+            self.ui.tableWidget.setRowCount(len(answer))
+            for i in range(len(answer)):
+                self.ui.tableWidget.setItem(row, 0, QTableWidgetItem(str(answer[i][0])))
+                self.ui.tableWidget.setItem(row, 1, QTableWidgetItem(str(answer[i][1])))
+                self.ui.tableWidget.setItem(row, 2, QTableWidgetItem(str(answer[i][2])))
+                self.ui.tableWidget.setItem(row, 3, QTableWidgetItem(str(answer[i][3])))
+                self.ui.tableWidget.setItem(row, 4, QTableWidgetItem(str(answer[i][4])+"GB"))
+                self.ui.tableWidget.setItem(row, 5, QTableWidgetItem(str(answer[i][5])+"GB"))
+                self.ui.tableWidget.setItem(row, 6, QTableWidgetItem(str(answer[i][6])+"MP"))
+                self.ui.tableWidget.setItem(row, 7, QTableWidgetItem(str(answer[i][7])[:-2]+"$"))
+                row+=1
+            print("read phones ok")
+    def eventbtn(self):
+        if self.sender().text()=="Left":
+            self.close()
+        else:
+            self.ui.lineEdit.setText('')
+            self.close()
+            self.open=ShowProduct()
+            self.open.show()
 
 
 class ShowLaptops(QMainWindow, Connectdb):
@@ -718,8 +760,42 @@ class ShowLaptops(QMainWindow, Connectdb):
         self.ui.setupUi(self)
         self.create_db()
         self.CreateProductLaptop()
+        self.changetextlineedit()
+        self.ui.pushButton_2.clicked.connect(self.eventbtn)
+        self.ui.pushButton_3.clicked.connect(self.eventbtn)
+        self.ui.lineEdit.textChanged.connect(self.changetextlineedit)
         
-        
+    def changetextlineedit(self):
+        try:
+            with self.mydb.cursor() as cursor:
+                cursor.execute(f"""SELECT *FROM laptops where name like '{self.ui.lineEdit.text()}%'""")
+                answer=cursor.fetchall()
+        except Exception as err: print(err)
+        else:
+            row=0
+            self.ui.tableWidget.setRowCount(len(answer))
+            for i in range(len(answer)):
+                self.ui.tableWidget.setItem(row, 0, QTableWidgetItem(str(answer[i][0])))
+                self.ui.tableWidget.setItem(row, 1, QTableWidgetItem(str(answer[i][1])))
+                self.ui.tableWidget.setItem(row, 2, QTableWidgetItem(str(answer[i][2])))
+                self.ui.tableWidget.setItem(row, 3, QTableWidgetItem(str(answer[i][3])))
+                self.ui.tableWidget.setItem(row, 4, QTableWidgetItem(str(answer[i][4])+"GB"))
+                self.ui.tableWidget.setItem(row, 5, QTableWidgetItem(str(answer[i][5])+"GB"))
+                self.ui.tableWidget.setItem(row, 6, QTableWidgetItem(str(answer[i][6])))
+                self.ui.tableWidget.setItem(row, 7, QTableWidgetItem(str(answer[i][7])))
+                self.ui.tableWidget.setItem(row, 8, QTableWidgetItem(str(answer[i][8])[:-2]+"$"))
+                row+=1
+            print("read laptops ok")
+    
+    def eventbtn(self):
+        if self.sender().text()=="Left":
+            self.close()
+        else:
+            self.ui.lineEdit.setText('')
+            self.close()
+            self.open=ShowProduct()
+            self.open.show()
+            
 
 class ShowSmarWatchs(QMainWindow, Connectdb):
     def __init__(self) -> None:
@@ -728,7 +804,40 @@ class ShowSmarWatchs(QMainWindow, Connectdb):
         self.ui.setupUi(self)
         self.create_db()
         self.CreateProductSmartWatch()
-
+        self.changetextlineedit()
+        self.ui.pushButton_2.clicked.connect(self.eventbtn)
+        self.ui.pushButton_3.clicked.connect(self.eventbtn)
+        self.ui.lineEdit.textChanged.connect(self.changetextlineedit)
+        
+    def changetextlineedit(self):
+        try:
+            with self.mydb.cursor() as cursor:
+                cursor.execute(f"""SELECT *FROM smartwatchs where name like '{self.ui.lineEdit.text()}%'""")
+                answer=cursor.fetchall()
+        except Exception as err: print(err)
+        else:
+            row=0
+            self.ui.tableWidget.setRowCount(len(answer))
+            for i in range(len(answer)):
+                self.ui.tableWidget.setItem(row, 0, QTableWidgetItem(str(answer[i][0])))
+                self.ui.tableWidget.setItem(row, 1, QTableWidgetItem(str(answer[i][1])))
+                self.ui.tableWidget.setItem(row, 2, QTableWidgetItem(str(answer[i][2])))
+                self.ui.tableWidget.setItem(row, 3, QTableWidgetItem(str(answer[i][3])))
+                self.ui.tableWidget.setItem(row, 4, QTableWidgetItem(str(answer[i][4])+"GB"))
+                self.ui.tableWidget.setItem(row, 5, QTableWidgetItem(str(answer[i][5])+"MAH"))
+                self.ui.tableWidget.setItem(row, 6, QTableWidgetItem(str(answer[i][6])[:-2]+"$"))
+                row+=1
+            print("read smartwatchs ok")
+            
+                
+    def eventbtn(self):
+        if self.sender().text()=="Left":
+            self.close()
+        else:
+            self.ui.lineEdit.setText('')
+            self.close()
+            self.open=ShowProduct()
+            self.open.show()
 
 
 
