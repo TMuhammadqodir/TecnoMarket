@@ -20,7 +20,8 @@ class Connectdb(QWidget):
             mycursor.close()
         except Exception as err: print(err)
         else: print('create db successfull')
-    
+        # Izoh: Bu funksiya market malumotlarini saqlash uchun texnomarketdb nomli malumotlar bazasini yaratadi va uni ishga tushuradi
+
     def adminTable(self):
         try:
             with self.mydb.cursor() as cursor:
@@ -31,6 +32,7 @@ class Connectdb(QWidget):
                     );""")
         except Exception as err: print(err)
         else: print("create table successful")
+        # Izoh Bu funksiya yaratilgan malumotlar bazasi ichida adminlar uchun adminTable nomli jadval yaratadi u yurda marketga kirish kodlari saqlanadi
     
     def CreateProductPhone(self):
         try:
@@ -47,6 +49,7 @@ class Connectdb(QWidget):
                     );""")
         except Exception as err: print(err)
         else: print('phone ok')
+        # Izoh Bu funksiya malumotlar bazasida telefonlar haqidagi malumotlarni saqlash uchun phones nomli jadval yaratadi u yerda telefonlar haqidagi malumotlar uning xarakteristikalari saqlanadi 
         
     def CreateProductLaptop(self):
         try:
@@ -64,6 +67,7 @@ class Connectdb(QWidget):
                     );""")
         except Exception as err: print(err)
         else: print("laptop ok")
+        # Izoh Bu funksiya malumotlar bazasida kompyuterlar haqidagi malumotlarni saqlash uchun laptops nomli jadval yaratadi u yerda kompyuterlar haqidagi malumotlar uning xarakteristikalari saqlanadi
         
     def CreateProductSmartWatch(self):
         try:
@@ -79,6 +83,18 @@ class Connectdb(QWidget):
                     );""")
         except Exception as err: print(err)
         else: print("SmartW ok")
+        # Izoh Bu funksiya malumotlar bazasida aqllisoatlar haqidagi malumotlarni saqlash uchun smartwatchs nomli jadval yaratadi u yerda aqllisoatlar haqidagi malumotlar uning xarakteristikalari saqlanadi
+        
+    def CreateUsersData(self):
+        try:
+            with self.mydb.cursor() as cursor:
+                cursor.execute("""CREATE TABLE IF NOT EXISTS users(
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    
+                );""")
+        except Exception as err: print(err)
+        else:
+            print("users ok")
         
     def SetLoginPassword(self,login, password, newlogin, newpassword):
         temp=self.GetLoginPassword()
@@ -93,6 +109,7 @@ class Connectdb(QWidget):
         else:
             self.mydb.commit()
             return True
+        # Izoh BU funksiya admin menu ga kirish parolini o'zgartirish uchun xizmat qiladi
        
     def GetLoginPassword(self):
         result=[]
@@ -103,7 +120,7 @@ class Connectdb(QWidget):
         except Exception as err: print(err)
         else: print("DaTa GiVe")
         return result
-        
+        # Izoh Bu funksiya admin menu siga kirish parolini SetLoginPassword nomli funksiyaga jo'natadi
 
 class KirishPage(Connectdb):
     def __init__(self) -> None:
@@ -114,11 +131,12 @@ class KirishPage(Connectdb):
             try:
                 with self.mydb.cursor() as cursor:
                     cursor.execute("""INSERT INTO adminTable(login,password)
-                                   VALUES('1','9')""")
+                                   VALUES('11111111','99999999')""")
             except Exception as err: print(err)
             else:
                 self.mydb.commit() 
                 print("Locked")
+            # Izoh bu yerda agar admin menu da parol mavjud bolmasa avtomatik tarzda unga 11111111, 99999999 login paroli o'rnatiladi
             
         self.setMinimumHeight(400)
         self.setMinimumWidth(400)
@@ -149,6 +167,8 @@ class KirishPage(Connectdb):
         
         self.show()
         
+        # Izoh yuqoridagi qismda tugmalar, label, parol kiritish uchun linedit lar yartilgan va funksiyalarga bog'langan
+        
     def kirish(self):
         temp=self.GetLoginPassword()
         if self.Ledit1.text() == temp[0][0] and self.Ledit2.text() == temp[0][1]:
@@ -162,7 +182,7 @@ class KirishPage(Connectdb):
             self.Ledit1.setText('')
             self.Ledit2.setText('')
             self.checklabel.setText("wrong is password or login !")
-            
+        # Izoh bu yerda admin menu ga kirish uchun kiritilgan login va parollar tekshiriladi agar ular mos kelsa MenuPage class ishga tushadi va keyingi sahifa ochiladi
             
 class MenuPage(QWidget):
     def __init__(self) -> None:
@@ -192,9 +212,12 @@ class MenuPage(QWidget):
         self.setLayout(self.v_box)
         self.setteelshett(self.lis)
         
+        # Izoh yuqorida MenuPage ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan
+        
     def setteelshett(self, temp):
         for i in temp:
             i.setFixedHeight(50)
+        # Izoh bu funksiya Button(tugmalar razmerini belgilaydi)
         
     def eventclick(self):
         if self.sender().text()=="change password":
@@ -221,7 +244,8 @@ class MenuPage(QWidget):
         else:
             self.close()
             self.open=KirishPage()
-            self.show()
+            self.open.show()
+        # Izoh Bu funksiya tugmalar bosilganda ularga mos keladigan class lar ishga tushiriladi va keyingi sahifani ochib beradi
             
                    
 class NewLoginPage(QWidget):
@@ -257,6 +281,7 @@ class NewLoginPage(QWidget):
         self.v_box.addLayout(self.h_box)
         self.v_box.addWidget(self.checklabel)
         self.setLayout(self.v_box)
+        # Izoh yuqorida NewLoginPage ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan
         
     def eventbtn(self):
         if self.sender().text()=="back":
@@ -277,7 +302,8 @@ class NewLoginPage(QWidget):
             else:
                 self.checklabel.setText("wrong is password or login !")
                 for i in self.lis[1:5]:
-                    i.clear()       
+                    i.clear()
+        # Izoh bu funksiya admin menu sidagi login va parolni o'zgartirish uchun ishlaydi    
             
     def setteelshett(self, temp):
         for i in temp:
@@ -313,6 +339,8 @@ class AddDelProduct(Connectdb):
                 self.lis[i].clicked.connect(self.eventclick)
         self.v_box.addLayout(self.h_box)
         self.setLayout(self.v_box)
+        # Izoh yuqorida AddDelProduct ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan
+        
         
     def eventclick(self):
         if self.sender().text()=="Phone":
@@ -342,6 +370,7 @@ class AddDelProduct(Connectdb):
             self.open.show()
         else:
             self.close()
+        # Izoh Bu funksiya telefonni, kompyuter yoki aqqllisoatlarni biri tanlansa ularni o'chirish uchun sahifa ochib berish uchun hizmat qiladi
             
     def setteelshett(self, temp):
         for i in temp:
@@ -386,7 +415,9 @@ class AddPhone(Connectdb):
         self.v_box.addLayout(self.h_box)
         self.v_box.addWidget(self.checklabel)
         
-        self.setLayout(self.v_box)    
+        self.setLayout(self.v_box)
+        # Izoh yuqorida AddPhone ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan
+            
         
     def setteelshett(self, temp):
         for i in temp:
@@ -420,14 +451,17 @@ class AddPhone(Connectdb):
                 self.ledit6.setText('') 
                 self.ledit7.setText('') 
                 self.ledit3.setText('')
+            # Izoh bu shart da marketga telefon qo'shish uchun hizmat qiladi kirtilgan malumotlar to'liqligi tekshiriladi to'liq bo'lsa u malumotlar malumotlar bazasidagi phones nomli jadval ga yoziladi
                 
         elif self.sender().text()=="back":
             self.checklabel.setText('')
             self.close()
             self.open=AddDelProduct(1)
             self.open.show()
+            # Izoh bu shartda joriy sahifadan orqaga qaytish uchun ishlatiladi
         else:
             self.close()
+            # Izoh bu shart menu ni butunlay tark etishni bajaradi
             
         
 class AddLaptop(Connectdb):
@@ -470,7 +504,10 @@ class AddLaptop(Connectdb):
         self.v_box.addLayout(self.h_box)
         self.v_box.addWidget(self.checklabel)
         
-        self.setLayout(self.v_box)    
+        self.setLayout(self.v_box)   
+        
+        # Izoh yuqorida AddLaptop ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan
+         
         
     def setteelshett(self, temp):
         for i in temp:
@@ -506,14 +543,17 @@ class AddLaptop(Connectdb):
                 self.ledit7.setText('') 
                 self.ledit3.setText('')
                 self.ledit8.setText('')
+            # Izoh bu shart da marketga kompyuter qo'shish uchun hizmat qiladi kirtilgan malumotlar to'liqligi tekshiriladi to'liq bo'lsa u malumotlar malumotlar bazasidagi laptops nomli jadval ga yoziladi
                 
         elif self.sender().text()=="back":
             self.checklabel.setText('')
             self.close()
             self.open=AddDelProduct(1)
             self.open.show()
+            # Izoh bu shartda joriy sahifadan orqaga qaytish uchun ishlatiladi
         else:
             self.close()
+            # Izoh bu shart menu ni butunlay tark etishni bajaradi
         
 class AddSmartWatch(Connectdb):
     def __init__(self) -> None:
@@ -551,12 +591,13 @@ class AddSmartWatch(Connectdb):
         self.v_box.addLayout(self.h_box)
         self.v_box.addWidget(self.checklabel)
         
-        self.setLayout(self.v_box)    
+        self.setLayout(self.v_box)  
+        # Izoh yuqorida AddSmartWatch ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan  
         
     def setteelshett(self, temp):
         for i in temp:
-            i.setFixedHeight(50)    
-            
+            i.setFixedHeight(50)        
+        
     def eventbtn(self):
         if self.sender().text()=="Add":
             if len(self.ledit1.text())>0 and len(self.ledit2.text())>0 and len(self.ledit3.text())>0 and len(self.ledit4.text())>0 and len(self.ledit5.text())>0 and len(self.ledit6.text())>0 and len(self.ledit7.text())>0 and self.ledit3.text().isnumeric() and self.ledit5.text().isnumeric() and self.ledit6.text().isnumeric() and len(self.ledit8.text())>0:
@@ -583,14 +624,17 @@ class AddSmartWatch(Connectdb):
                 self.ledit5.setText('') 
                 self.ledit6.setText('') 
                 self.ledit3.setText('')
+                # Izoh bu shart da marketga aqllisoat qo'shish uchun hizmat qiladi kirtilgan malumotlar to'liqligi tekshiriladi to'liq bo'lsa u malumotlar malumotlar bazasidagi smartwatchs nomli jadval ga yoziladi
                 
         elif self.sender().text()=="back":
             self.checklabel.setText('')
             self.close()
             self.open=AddDelProduct(1)
             self.open.show()
+            # Izoh bu shartda joriy sahifadan orqaga qaytish uchun ishlatiladi
         else:
             self.close()
+            # Izoh bu shart menu ni butunlay tark etishni bajaradi
         
         
 class delProduct(Connectdb):
@@ -630,6 +674,8 @@ class delProduct(Connectdb):
         self.v_box.addLayout(self.h_box)
         self.setLayout(self.v_box)
         
+        # Izoh yuqorida delProduct ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan  
+        
     def eventclick(self):
         if self.sender().text()=="delete":
             try:
@@ -653,7 +699,8 @@ class delProduct(Connectdb):
             self.open=AddDelProduct(0)
             self.open.show()
         else:
-            self.close()        
+            self.close()
+        # Izoh bu funksiya mahsulotlarni id bo'yicha o'chirish uchun hizmat qiladi 
         
     def setteelshett(self, temp):
         for i in temp:
@@ -683,7 +730,8 @@ class ShowProduct(QWidget):
             if i!=0:
                 self.lis[i].clicked.connect(self.eventclick)
         self.v_box.addLayout(self.h_box)
-        self.setLayout(self.v_box)            
+        self.setLayout(self.v_box) 
+        # Izoh yuqorida ShowProduct ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan             
     
     def eventclick(self): 
         if self.sender().text()=="Phones":
@@ -704,7 +752,7 @@ class ShowProduct(QWidget):
             self.open.show()
         else:
             self.close()
-        
+        # Izoh bu funksiya da telefon, kompyuter yoki aqllisoat lardan bittasi tanlanadi va tanlanganiga mos keladigan sahifa ochilib tanlangan mahsul haqidagi malumotlar ko'rsatiladi
     
     def setteelshett(self, temp):
         for i in temp:
@@ -722,6 +770,7 @@ class ShowPhones(QMainWindow, Connectdb):
         self.ui.pushButton_2.clicked.connect(self.eventbtn)
         self.ui.pushButton_3.clicked.connect(self.eventbtn)
         self.ui.lineEdit.textChanged.connect(self.changetextlineedit)
+        # Izoh yuqorida ShowPhones ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan  
         
     def changetextlineedit(self):
         try:
@@ -743,6 +792,7 @@ class ShowPhones(QMainWindow, Connectdb):
                 self.ui.tableWidget.setItem(row, 7, QTableWidgetItem(str(answer[i][7])[:-2]+"$"))
                 row+=1
             print("read phones ok")
+            # izoh bu funksiya telefon haqidagi malunmotlarni malumotlar bazasidagi phones nomli jadvaldan o'qib oladi va interfeysga chiqaradi
     def eventbtn(self):
         if self.sender().text()=="Left":
             self.close()
@@ -751,6 +801,7 @@ class ShowPhones(QMainWindow, Connectdb):
             self.close()
             self.open=ShowProduct()
             self.open.show()
+        # Izoh bu funksiya joriy sahifadan chiqib ketish uchun hizmat qiladi
 
 
 class ShowLaptops(QMainWindow, Connectdb):
@@ -764,6 +815,7 @@ class ShowLaptops(QMainWindow, Connectdb):
         self.ui.pushButton_2.clicked.connect(self.eventbtn)
         self.ui.pushButton_3.clicked.connect(self.eventbtn)
         self.ui.lineEdit.textChanged.connect(self.changetextlineedit)
+        # Izoh yuqorida ShowLaptops ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan  
         
     def changetextlineedit(self):
         try:
@@ -786,6 +838,7 @@ class ShowLaptops(QMainWindow, Connectdb):
                 self.ui.tableWidget.setItem(row, 8, QTableWidgetItem(str(answer[i][8])[:-2]+"$"))
                 row+=1
             print("read laptops ok")
+            # izoh bu funksiya kompyuter haqidagi malunmotlarni malumotlar bazasidagi laptops nomli jadvaldan o'qib oladi va interfeysga chiqaradi
     
     def eventbtn(self):
         if self.sender().text()=="Left":
@@ -795,7 +848,7 @@ class ShowLaptops(QMainWindow, Connectdb):
             self.close()
             self.open=ShowProduct()
             self.open.show()
-            
+            # Izoh bu funksiya joriy sahifadan chiqib ketish uchun hizmat qiladi
 
 class ShowSmarWatchs(QMainWindow, Connectdb):
     def __init__(self) -> None:
@@ -808,6 +861,7 @@ class ShowSmarWatchs(QMainWindow, Connectdb):
         self.ui.pushButton_2.clicked.connect(self.eventbtn)
         self.ui.pushButton_3.clicked.connect(self.eventbtn)
         self.ui.lineEdit.textChanged.connect(self.changetextlineedit)
+        # Izoh yuqorida ShowSmartWatchs ning tugmalari, labellari, lineditlari yaratilgan va ular joylashishi keltirilib funksiyalarga ulangan  
         
     def changetextlineedit(self):
         try:
@@ -828,7 +882,7 @@ class ShowSmarWatchs(QMainWindow, Connectdb):
                 self.ui.tableWidget.setItem(row, 6, QTableWidgetItem(str(answer[i][6])[:-2]+"$"))
                 row+=1
             print("read smartwatchs ok")
-            
+             # izoh bu funksiya aqllisoat haqidagi malunmotlarni malumotlar bazasidagi smartwatchs nomli jadvaldan o'qib oladi va interfeysga chiqaradi
                 
     def eventbtn(self):
         if self.sender().text()=="Left":
@@ -838,22 +892,10 @@ class ShowSmarWatchs(QMainWindow, Connectdb):
             self.close()
             self.open=ShowProduct()
             self.open.show()
+         # Izoh bu funksiya joriy sahifadan chiqib ketish uchun hizmat qiladi
 
 
 
-
-
-
-
-
-
-
-                
-        
-        
-        
-        
-        
         
 app=QApplication([])        
 win=KirishPage()
